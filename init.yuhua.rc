@@ -81,7 +81,7 @@ on boot
     mkdir /sqlite_stmt_journals/var/run 0777 system system
     setprop ro.kernel.android.qemud 0
     setprop ro.radio.use-ppp no
-    setprop wifi.interface eth0
+    setprop wifi.interface wlan0
     setprop CONNECTTYPE "WIFI"
     setprop WPA_SUPPLICANT_STATUS "notok"
     setprop ftpstatus "off"
@@ -100,100 +100,76 @@ service akmd /system/bin/akmd
     user compass
     group compass misc input
 
-service wlan_loader /system/bin/wlan_loader \
-    -f /system/etc/wifi/Fw1251r1c.bin -e /proc/calibration \
+service wlan_loader /system/bin/wlan_loader
+    -f /system/etc/wifi/Fw1251r1c.bin -e /proc/calibration
     -i /system/etc/wifi/tiwlan.ini
-    disabled
     oneshot
 service iwconfig /system/bin/iwconfig eth0 power on
     user wifi root
     group wifi inet root
     socket wpa_eth0 dgram 660 wifi wifi root
-    disabled
     oneshot
-service wpa_supplicant /system/bin/wpa_supplicant \
+    disabled
+service wpa_supplicant /system/bin/wpa_supplicant
     -Dwext -ieth0 -c/data/misc/wifi/wpa_supplicant.conf 
     user wifi root
     group wifi inet root
     socket wpa_eth0 dgram 660 wifi wifi root
-    disabled
 
 # for the moment, while debugging dhcpcd, logwrapper is
 # used to get its output to appear in the logs. This will
 # be removed before shipping.
 service dhcpcd /system/bin/logwrapper dhcpcd -d -d
-    disabled
     oneshot
 service wifiopen /system/bin/wifiopen.sh                                         
-    disabled
     oneshot
 service wificlose /system/bin/wificlose.sh                                            
-    disabled
     oneshot
 service btopen /system/bin/btopen.sh                                         
-    disabled
     oneshot
 service btclose /system/bin/btclose.sh                                            
-    disabled
     oneshot
 service bccmdinit /system/bin/bccmdinit.sh
-    disabled
     oneshot
 service wifideepsleep /system/bin/wifideepsleep.sh
-    disabled 
     oneshot
 service btdeepsleep /system/bin/btdeepsleep.sh
-    disabled 
     oneshot
 service gh381deepsleep /system/bin/gh381deepsleep.sh
-    disabled 
     oneshot
 service gh381pcmset /system/bin/gh381pcmset.sh
-    disabled 
     oneshot
 service hciattach38400 /system/bin/hciattach -n /dev/ttyS2 any 38400 flow
     socket bluetooth stream 660 bluetooth bluetooth
     user bluetooth           
     group bluetooth net_bt_admin
-    disabled
 service hciattach1500000 /system/bin/hciattach -n /dev/ttyS2 any 1500000 flow
     socket bluetooth stream 660 bluetooth bluetooth
     user bluetooth           
     group bluetooth net_bt_admin
-    disabled   
 service hciattach115200 /system/bin/hciattach -n /dev/ttyS2 any 115200 flow
     socket bluetooth stream 660 bluetooth bluetooth
     user bluetooth
     group bluetooth net_bt_admin
-    disabled
 service bttestmode /system/bin/bttestmode.sh
-    disabled
     oneshot
 
 service yuhua-board-init /init.yuhua.sh
     oneshot
 service iptablesscript /system/bin/iptablesscript.sh
-    disabled
     oneshot
 service dun /system/bin/dund.sh
-    disabled
 #add for wifi ap
 service udhcpd /system/bin/udhcpd /data/misc/udhcpd/udhcpd.conf &
-    disabled
 service switchap2cl /system/bin/switchap2cl.sh
-    disabled
     oneshot
 #add for bt PAN
 service pan /system/bin/pand -n -s -r NAP -d NAP -u /system/bin/pand_up.sh
-    disabled
 service panconnect /system/bin/panconnect.sh
-    disabled
     oneshot
 service pandisconnect /system/bin/pandisconnect.sh
-    disabled
     oneshot
 service pandisall /system/bin/pand -K
-    disabled
     oneshot
 #hongcheng.xie add 2009-01-05 for dual mode modem2
 service ril-daemon-2 /system/bin/rild -l libnxp5209-ril.so -- -d /dev/ttyp5 &
@@ -206,11 +182,8 @@ service multi /system/bin/multi -c 1 -f /system/etc/multi_cfg/multiarm.cfg &
 service multi_2 /system/bin/multi -c 2 -f /system/etc/multi_cfg/multiarm2.cfg &
 
 service usb-udhcpd /system/bin/udhcpd /data/misc/udhcpd/udhcpd_usb.conf &
-    disabled
     oneshot
 service usb-tether-start /system/bin/usb-tether start
-    disabled
     oneshot
 service usb-tether-stop /system/bin/usb-tether stop
-    disabled
     oneshot
